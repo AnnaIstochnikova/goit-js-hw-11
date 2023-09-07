@@ -11,10 +11,51 @@ form {
 }
 
 .button {
+  border-width: 0.5px;
+  border-radius: 4px;
   padding: 0;
   position: relative;
-  right: 23px;
+  right: 24px;
   height: 20px;
   width: 20px;
-  margin: 1.5px;
+  margin: 2px;
+}
+input {
+  margin-bottom: 13px;
+}
+input:focus {
+  outline: none;
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 20px;
+}
+
+.photo-card {
+  padding: 6px;
+  & > a > img {
+    object-fit: cover;
+    width: 200px;
+    height: 130px;
+  }
+  & > .info {
+    width: 200px;
+    display: flex;
+  }
+}
+
+.info-item > b {
+  font-size: 10px;
+  &:nth-last-child(1) {
+    font-weight: 100;
+  }
+  padding: 2.5px;
+  display: flex;
+  justify-content: center;
+}
+
+.search-form {
+  background-color: rgb(83, 83, 128);
 }
