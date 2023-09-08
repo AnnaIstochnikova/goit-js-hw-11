@@ -17,6 +17,9 @@ let requestedWord = '';
 const gallery = document.querySelector('.gallery');
 const btn = document.querySelector('.button');
 const input = document.querySelector('.searchQuery');
+const btnLoadMore = document.querySelector('.load-more');
+const buttonLoadMore = `<button type="button" class="load-more">Load more</button>`;
+let currentPage = 1;
 
 input.addEventListener('change', function eventHandler(event) {
   event.preventDefault();
@@ -31,9 +34,13 @@ input.addEventListener('change', function eventHandler(event) {
           orientation: 'horizontal',
           image_type: 'photo',
           per_page: 40,
+          page: currentPage,
         },
       }
     );
+    //buttonLoadMore = '';
+    gallery.insertAdjacentHTML('afterend', buttonLoadMore);
+    console.log(btnLoadMore);
     console.log(response.data);
     return response.data;
   };
@@ -83,9 +90,42 @@ function renderPhotos(photos) {
       </div>
     </div>`;
     let simpleLightbox = new SimpleLightbox('.gallery a', {
-      captionsData: 'alt',
       captionDelay: 250,
     });
     gallery.insertAdjacentHTML('afterbegin', addPhotoToSelect);
   });
 }
+console.log(btnLoadMore);
+
+setTimeout(() => {
+  btnLoadMore.addEventListener('click', function loadMoreHandler() {
+    console.log('clicked');
+    currentPage++;
+    fetchData()
+      .then(data => {
+        renderPhotos(data.hits);
+      })
+      .catch(error => console.log(error.message));
+  });
+}, 1000);
+
+// if (btnLoadMore === null) {
+//   btnLoadMore.addEventListener('click', function loadMoreHandler() {
+//     console.log('clicked');
+//     currentPage++;
+//     fetchData()
+//       .then(data => {
+//         //gallery.innerHTML = '';
+//         renderPhotos(data.hits);
+//         // if (data.hits.length === 0) {
+//         //   Notiflix.Notify.failure(
+//         //     'Sorry, there are no images matching your search query. Please try again.'
+//         //   );
+//         // }
+//         // if (data.hits.length !== 0) {
+//         //   Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
+//         // }
+//       })
+//       .catch(error => console.log(error.message));
+//   });
+// }
