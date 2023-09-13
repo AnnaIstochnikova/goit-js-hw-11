@@ -9,7 +9,7 @@ Notiflix.Notify.init({
   width: '400px',
   position: 'center-center',
   failure: {
-    background: '#F370E2',
+    background: '#ff0000',
     textColor: '#fff',
   },
 });
@@ -55,7 +55,7 @@ input.addEventListener('change', function eventHandler(event) {
         if (data.hits.length !== 0) {
           Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
           btnLoadMore = document.querySelector('#load-more');
-          if (!btnLoadMore) {
+          if (!btnLoadMore && data.totalHits > 40) {
             pushButton();
             btnLoadMore.addEventListener('click', function loadMoreHandler() {
               currentPage = 1;
@@ -63,6 +63,12 @@ input.addEventListener('change', function eventHandler(event) {
               fetchData()
                 .then(data => {
                   renderPhotos(data.hits);
+                  if (gallery.children.length >= data.totalHits) {
+                    Notiflix.Notify.failure(
+                      "We're sorry, but you've reached the end of search results."
+                    );
+                    btnLoadMore.style.display = 'none';
+                  }
                 })
                 .catch(error => console.log(error.message));
             });
