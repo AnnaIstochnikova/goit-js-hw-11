@@ -63,9 +63,6 @@ input.addEventListener('change', function eventHandler(event) {
               fetchData()
                 .then(data => {
                   renderPhotos(data.hits);
-                  let numberOfPhotosOnPage =
-                    document.querySelector('.sl-total');
-                  console.log(numberOfPhotosOnPage);
                 })
                 .catch(error => console.log(error.message));
             });
@@ -107,9 +104,10 @@ function renderPhotos(photos) {
         </p>
       </div>
     </div>`;
-    let simpleLightbox = new SimpleLightbox('.gallery a', {
-      captionDelay: 250,
-    });
+
     gallery.insertAdjacentHTML('beforeend', addPhotoToSelect);
+  });
+  let simpleLightbox = new SimpleLightbox('.gallery a', {
+    captionDelay: 250,
   });
 }
