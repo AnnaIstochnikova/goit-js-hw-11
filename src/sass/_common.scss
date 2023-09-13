@@ -70,7 +70,7 @@ input:focus {
   width: 150px;
   height: 40px;
   border: none;
-  display: none;
+  display: flex;
   margin: 0 auto 50 auto;
   background-color: rgb(83, 83, 128);
   color: white;
@@ -78,4 +78,8 @@ input:focus {
   &:hover {
     cursor: pointer;
   }
+}
+
+.hidden {
+  display: none;
 }

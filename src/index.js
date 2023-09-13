@@ -18,9 +18,12 @@ const gallery = document.querySelector('.gallery');
 const btn = document.querySelector('.button');
 const input = document.querySelector('.searchQuery');
 const buttonLoadMore = `<button type="button" id="load-more" class="load-more">Load more</button>`;
-let btnLoadMore = null;
 let requestedWord = '';
 let currentPage = 1;
+
+gallery.insertAdjacentHTML('afterend', buttonLoadMore);
+const btnLoadMore = document.querySelector('.load-more');
+btnLoadMore.classList.add('hidden');
 
 input.addEventListener('change', function eventHandler(event) {
   event.preventDefault();
@@ -55,9 +58,8 @@ btn.addEventListener('click', function runButton(event) {
         );
       }
       Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
-      btnLoadMore = document.querySelector('#load-more');
-      if (!btnLoadMore && data.totalHits > 40) {
-        pushButton();
+      if (data.totalHits > 40) {
+        btnLoadMore.classList.remove('hidden');
         btnLoadMore.addEventListener('click', function loadMoreHandler() {
           currentPage = 1;
           currentPage++;
@@ -67,10 +69,10 @@ btn.addEventListener('click', function runButton(event) {
               renderPhotos(data.hits);
               currentPage++;
               if (gallery.children.length >= data.totalHits) {
+                btnLoadMore.classList.add('hidden');
                 Notiflix.Notify.failure(
                   "We're sorry, but you've reached the end of search results."
                 );
-                btnLoadMore.style.display = 'none';
               }
             })
             .catch(error => console.log(error.message));
@@ -79,12 +81,6 @@ btn.addEventListener('click', function runButton(event) {
     })
     .catch(error => console.log(error.message));
 });
-
-function pushButton() {
-  gallery.insertAdjacentHTML('afterend', buttonLoadMore);
-  btnLoadMore = document.querySelector('#load-more');
-  btnLoadMore.style.display = 'flex';
-}
 
 function renderPhotos(photos) {
   photos.forEach(photo => {
