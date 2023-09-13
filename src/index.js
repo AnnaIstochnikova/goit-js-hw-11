@@ -13,17 +13,17 @@ Notiflix.Notify.init({
   },
 });
 
-let requestedWord = '';
 const gallery = document.querySelector('.gallery');
 const btn = document.querySelector('.button');
 const input = document.querySelector('.searchQuery');
-// const buttonLoadMore = `<button type="button" class="load-more">Load more</button>`;
+const buttonLoadMore = `<button type="button" id="load-more" class="load-more">Load more</button>`;
+let btnLoadMore = null;
+let requestedWord = '';
 let currentPage = 1;
 
 input.addEventListener('change', function eventHandler(event) {
   event.preventDefault();
   requestedWord = event.target.value.toLowerCase().replace(/\s+/g, '+');
-  //console.log(requestedWord);
   const fetchData = async () => {
     const response = await axios.get(
       `https://pixabay.com/api/?key=39259694-dab3c4ff3451cd0969a895f6a&q=${requestedWord}`,
@@ -37,10 +37,6 @@ input.addEventListener('change', function eventHandler(event) {
         },
       }
     );
-    //buttonLoadMore = '';
-
-    console.log(btnLoadMore);
-    console.log(response.data);
     return response.data;
   };
 
@@ -56,29 +52,34 @@ input.addEventListener('change', function eventHandler(event) {
           );
         }
         if (data.hits.length !== 0) {
-          const buttonLoadMore = `<button type="button" class="load-more">Load more</button>`;
           Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
-          //let btnLoadMore = '';
-          let btnLoadMore = false;
+          btnLoadMore = document.querySelector('#load-more');
           if (!btnLoadMore) {
-            gallery.insertAdjacentHTML('afterend', buttonLoadMore);
-            btnLoadMore = document.querySelector('.load-more');
+            pushButton();
             btnLoadMore.addEventListener('click', function loadMoreHandler() {
-              console.log('clicked');
+              currentPage = 1;
               currentPage++;
+              fetchData()
+                .then(data => {
+                  renderPhotos(data.hits);
+                  let numberOfPhotosOnPage =
+                    document.querySelector('.sl-total');
+                  console.log(numberOfPhotosOnPage);
+                })
+                .catch(error => console.log(error.message));
             });
           }
-
-          fetchData()
-            .then(data => {
-              renderPhotos(data.hits);
-            })
-            .catch(error => console.log(error.message));
         }
       })
       .catch(error => console.log(error.message));
   });
 });
+
+function pushButton() {
+  gallery.insertAdjacentHTML('afterend', buttonLoadMore);
+  btnLoadMore = document.querySelector('#load-more');
+  btnLoadMore.style.display = 'flex';
+}
 
 function renderPhotos(photos) {
   photos.forEach(photo => {
@@ -108,40 +109,6 @@ function renderPhotos(photos) {
     let simpleLightbox = new SimpleLightbox('.gallery a', {
       captionDelay: 250,
     });
-    gallery.insertAdjacentHTML('afterbegin', addPhotoToSelect);
+    gallery.insertAdjacentHTML('beforeend', addPhotoToSelect);
   });
 }
-console.log(btnLoadMore);
-
-// setTimeout(() => {
-//   btnLoadMore.addEventListener('click', function loadMoreHandler() {
-//     console.log('clicked');
-//     currentPage++;
-//     fetchData()
-//       .then(data => {
-//         renderPhotos(data.hits);
-//       })
-//       .catch(error => console.log(error.message));
-//   });
-// }, 1000);
-
-// if (btnLoadMore === null) {
-//   btnLoadMore.addEventListener('click', function loadMoreHandler() {
-//     console.log('clicked');
-//     currentPage++;
-//     fetchData()
-//       .then(data => {
-//         //gallery.innerHTML = '';
-//         renderPhotos(data.hits);
-//         // if (data.hits.length === 0) {
-//         //   Notiflix.Notify.failure(
-//         //     'Sorry, there are no images matching your search query. Please try again.'
-//         //   );
-//         // }
-//         // if (data.hits.length !== 0) {
-//         //   Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
-//         // }
-//       })
-//       .catch(error => console.log(error.message));
-//   });
-// }
