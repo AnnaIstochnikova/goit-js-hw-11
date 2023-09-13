@@ -17,8 +17,7 @@ let requestedWord = '';
 const gallery = document.querySelector('.gallery');
 const btn = document.querySelector('.button');
 const input = document.querySelector('.searchQuery');
-const btnLoadMore = document.querySelector('.load-more');
-const buttonLoadMore = `<button type="button" class="load-more">Load more</button>`;
+// const buttonLoadMore = `<button type="button" class="load-more">Load more</button>`;
 let currentPage = 1;
 
 input.addEventListener('change', function eventHandler(event) {
@@ -39,7 +38,7 @@ input.addEventListener('change', function eventHandler(event) {
       }
     );
     //buttonLoadMore = '';
-    gallery.insertAdjacentHTML('afterend', buttonLoadMore);
+
     console.log(btnLoadMore);
     console.log(response.data);
     return response.data;
@@ -57,7 +56,24 @@ input.addEventListener('change', function eventHandler(event) {
           );
         }
         if (data.hits.length !== 0) {
+          const buttonLoadMore = `<button type="button" class="load-more">Load more</button>`;
           Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
+          //let btnLoadMore = '';
+          let btnLoadMore = false;
+          if (!btnLoadMore) {
+            gallery.insertAdjacentHTML('afterend', buttonLoadMore);
+            btnLoadMore = document.querySelector('.load-more');
+            btnLoadMore.addEventListener('click', function loadMoreHandler() {
+              console.log('clicked');
+              currentPage++;
+            });
+          }
+
+          fetchData()
+            .then(data => {
+              renderPhotos(data.hits);
+            })
+            .catch(error => console.log(error.message));
         }
       })
       .catch(error => console.log(error.message));
@@ -97,17 +113,17 @@ function renderPhotos(photos) {
 }
 console.log(btnLoadMore);
 
-setTimeout(() => {
-  btnLoadMore.addEventListener('click', function loadMoreHandler() {
-    console.log('clicked');
-    currentPage++;
-    fetchData()
-      .then(data => {
-        renderPhotos(data.hits);
-      })
-      .catch(error => console.log(error.message));
-  });
-}, 1000);
+// setTimeout(() => {
+//   btnLoadMore.addEventListener('click', function loadMoreHandler() {
+//     console.log('clicked');
+//     currentPage++;
+//     fetchData()
+//       .then(data => {
+//         renderPhotos(data.hits);
+//       })
+//       .catch(error => console.log(error.message));
+//   });
+// }, 1000);
 
 // if (btnLoadMore === null) {
 //   btnLoadMore.addEventListener('click', function loadMoreHandler() {
