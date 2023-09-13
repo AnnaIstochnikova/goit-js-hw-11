@@ -5,6 +5,7 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
 Notiflix.Notify.init({
+  showOnlyTheLastOne: true,
   width: '400px',
   position: 'center-center',
   failure: {

@@ -65,10 +65,17 @@ input:focus {
 }
 
 .load-more {
+  padding-top: 5px;
+  font-size: 25.7;
+  width: 150px;
+  height: 40px;
   border: none;
   display: none;
-  margin: 0 auto 25 auto;
+  margin: 0 auto 50 auto;
   background-color: rgb(83, 83, 128);
   color: white;
   border-radius: 4px;
+  &:hover {
+    cursor: pointer;
+  }
 }
