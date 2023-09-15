@@ -25,7 +25,7 @@ gallery.insertAdjacentHTML('afterend', buttonLoadMore);
 const btnLoadMore = document.querySelector('.load-more');
 btnLoadMore.classList.add('hidden');
 
-input.addEventListener('change', function eventHandler(event) {
+input.addEventListener('change', function (event) {
   event.preventDefault();
   requestedWord = event.target.value.toLowerCase().replace(/\s+/g, '+');
 });
@@ -46,9 +46,9 @@ const fetchData = async () => {
   return response.data;
 };
 
-btn.addEventListener('click', function runButton(event) {
+btn.addEventListener('click', async event => {
   event.preventDefault();
-  fetchData()
+  const data = await fetchData()
     .then(data => {
       gallery.innerHTML = '';
       renderPhotos(data.hits);
@@ -60,20 +60,6 @@ btn.addEventListener('click', function runButton(event) {
         Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
         if (data.totalHits > 40) {
           btnLoadMore.classList.remove('hidden');
-          btnLoadMore.addEventListener('click', function loadMoreHandler() {
-            currentPage++;
-            fetchData()
-              .then(data => {
-                renderPhotos(data.hits);
-                if (gallery.children.length >= data.totalHits) {
-                  btnLoadMore.classList.add('hidden');
-                  Notiflix.Notify.failure(
-                    "We're sorry, but you've reached the end of search results."
-                  );
-                }
-              })
-              .catch(error => console.log(error.message));
-          });
         }
       }
     })
@@ -113,4 +99,19 @@ function renderPhotos(photos) {
 
 let simpleLightbox = new SimpleLightbox('.gallery a', {
   captionDelay: 250,
+});
+
+btnLoadMore.addEventListener('click', async () => {
+  currentPage++;
+  const data = await fetchData()
+    .then(data => {
+      renderPhotos(data.hits);
+      if (gallery.children.length >= data.totalHits) {
+        btnLoadMore.classList.add('hidden');
+        Notiflix.Notify.failure(
+          "We're sorry, but you've reached the end of search results."
+        );
+      }
+    })
+    .catch(error => console.log(error.message));
 });
